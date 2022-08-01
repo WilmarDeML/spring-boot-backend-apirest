@@ -44,7 +44,6 @@ public class ClienteRestController {
 	}
 
 	@PostMapping("clientes")
-	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody Cliente cliente) {
 		Map<String, Object> respuesta = new HashMap<>();
 		try {
@@ -60,9 +59,22 @@ public class ClienteRestController {
 	}
 
 	@PutMapping("clientes/{id}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente update(@PathVariable Long id, @RequestBody Cliente cliente) {
-		return  clienteService.update(id, cliente);
+	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Cliente cliente) {
+		Map<String, Object> respuesta = new HashMap<>();
+		try {
+			Cliente clienteActualizado = clienteService.update(id, cliente);
+			if (cliente == null) {
+				respuesta.put("mensaje", "El cliente que desea editar, con id ".concat(id.toString().concat(" no existe en base de datos!")));
+				return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
+			}
+			respuesta.put("mensaje", "El cliente ha sido actualizado con éxito!");
+			respuesta.put("cliente", clienteActualizado);
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
+		} catch (DataAccessException e) {
+			respuesta.put("mensaje", "Error al actaulizar cliente en base de datos");
+			respuesta.put("error", e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@DeleteMapping("clientes/{id}")
