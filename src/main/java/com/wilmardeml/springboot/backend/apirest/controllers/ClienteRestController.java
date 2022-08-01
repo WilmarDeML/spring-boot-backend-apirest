@@ -3,6 +3,7 @@ package com.wilmardeml.springboot.backend.apirest.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -38,7 +39,7 @@ public class ClienteRestController {
 			return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al realizar la consulta en base de datos");
-			respuesta.put("error", e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
+			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -53,7 +54,7 @@ public class ClienteRestController {
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al realizar el insert en base de datos");
-			respuesta.put("error", e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
+			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -72,7 +73,7 @@ public class ClienteRestController {
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al actaulizar cliente en base de datos");
-			respuesta.put("error", e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
+			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -86,7 +87,7 @@ public class ClienteRestController {
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al eliminar cliente en base de datos");
-			respuesta.put("error", e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
+			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
