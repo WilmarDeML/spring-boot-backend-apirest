@@ -48,6 +48,7 @@ public class ClienteServiceImpl implements IClienteService {
 			foundClient.setNombre(cliente.getNombre());
 			foundClient.setApellido(cliente.getApellido());
 			foundClient.setEmail(cliente.getEmail());
+			foundClient.setCreateAt(cliente.getCreateAt());
 			return this.save(foundClient);
 		}
 		return null;
