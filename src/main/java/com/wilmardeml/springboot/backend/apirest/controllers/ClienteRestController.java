@@ -129,9 +129,13 @@ public class ClienteRestController {
 		try {
 			if (!archivo.isEmpty()) {
 				String nombreArchivo = UUID.randomUUID().toString().concat("_".concat(Objects.requireNonNull(archivo.getOriginalFilename()).replace(" ", "")));
+				Cliente cliente = clienteService.upload(id, nombreArchivo);
+				if (cliente == null) {
+					respuesta.put("mensaje", "El cliente que desea editar, con id ".concat(id.toString().concat(" no existe en base de datos!")));
+					return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
+				}
 				Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
 				Files.copy(archivo.getInputStream(), rutaArchivo);
-				Cliente cliente = clienteService.upload(id, nombreArchivo);
 				respuesta.put("cliente", cliente);
 				respuesta.put("mensaje", "Has subido correctamente la imagen: ".concat(nombreArchivo));
 			}
