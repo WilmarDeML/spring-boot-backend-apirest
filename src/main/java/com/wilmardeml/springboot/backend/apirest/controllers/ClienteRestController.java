@@ -1,9 +1,10 @@
 package com.wilmardeml.springboot.backend.apirest.controllers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.wilmardeml.springboot.backend.apirest.models.entity.Cliente;
 import com.wilmardeml.springboot.backend.apirest.models.services.IClienteService;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -46,13 +48,13 @@ public class ClienteRestController {
 			Cliente cliente = clienteService.findById(id);
 			if (cliente == null) {
 				respuesta.put("mensaje", "El cliente con id ".concat(id.toString().concat(" no existe en base de datos!")));
-				return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
+			return new ResponseEntity<>(cliente, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al realizar la consulta en base de datos");
 			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -62,20 +64,20 @@ public class ClienteRestController {
 
 		if (result.hasErrors()) {
 			List<String> errors = result.getFieldErrors().stream().map(
-					error -> "El campo '".concat(error.getField()).concat("' ".concat(error.getDefaultMessage()))
+					error -> "El campo '".concat(error.getField()).concat("' ".concat(Objects.requireNonNull(error.getDefaultMessage())))
 			).collect(Collectors.toList());
 			respuesta.put("errores", errors);
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
 		}
 		try {
 			Cliente clienteNuevo = clienteService.save(cliente);
 			respuesta.put("mensaje", "El cliente ha sido creado con éxito!");
 			respuesta.put("cliente", clienteNuevo);
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
+			return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al realizar el insert en base de datos");
 			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -85,25 +87,25 @@ public class ClienteRestController {
 
 		if (result.hasErrors()) {
 			List<String> errors = result.getFieldErrors().stream().map(
-					error -> "El campo '".concat(error.getField()).concat("' ".concat(error.getDefaultMessage()))
+					error -> "El campo '".concat(error.getField()).concat("' ".concat(Objects.requireNonNull(error.getDefaultMessage())))
 			).collect(Collectors.toList());
 			respuesta.put("errores", errors);
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
 		}
 
 		try {
 			Cliente clienteActualizado = clienteService.update(id, cliente);
 			if (cliente == null) {
 				respuesta.put("mensaje", "El cliente que desea editar, con id ".concat(id.toString().concat(" no existe en base de datos!")));
-				return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
 			}
 			respuesta.put("mensaje", "El cliente ha sido actualizado con éxito!");
 			respuesta.put("cliente", clienteActualizado);
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
+			return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al actaulizar cliente en base de datos");
 			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -113,12 +115,35 @@ public class ClienteRestController {
 		try {
 			clienteService.delete(id);
 			respuesta.put("mensaje", "El cliente ha sido eliminado con éxito!");
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
+			return new ResponseEntity<>(respuesta, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al eliminar cliente en base de datos");
 			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	@PostMapping("clientes/upload")
+	public ResponseEntity<?> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("id") Long id) {
+		Map<String, Object> respuesta = new HashMap<>();
+		try {
+			if (!archivo.isEmpty()) {
+				String nombreArchivo = UUID.randomUUID().toString().concat("_".concat(Objects.requireNonNull(archivo.getOriginalFilename()).replace(" ", "")));
+				Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
+				Files.copy(archivo.getInputStream(), rutaArchivo);
+				Cliente cliente = clienteService.upload(id, nombreArchivo);
+				respuesta.put("cliente", cliente);
+				respuesta.put("mensaje", "Has subido correctamente la imagen: ".concat(nombreArchivo));
+			}
+			return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
+		} catch (DataAccessException e) {
+			respuesta.put("mensaje", "Error al actaulizar la imagen en base de datos");
+			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getMostSpecificCause().getMessage())));
+			return new ResponseEntity<>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (IOException e) {
+			respuesta.put("mensaje", "Error al subir la imagen del cliente");
+			respuesta.put("error", Objects.requireNonNull(e.getMessage()).concat(": ".concat(e.getCause().getMessage())));
+			return new ResponseEntity<>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

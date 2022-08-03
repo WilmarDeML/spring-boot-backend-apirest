@@ -8,15 +8,17 @@ import org.springframework.data.domain.Pageable;
 
 public interface IClienteService {
 
-	public List<Cliente> findAll();
+	List<Cliente> findAll();
 
-	public Page<Cliente> findAll(Pageable pageable);
+	Page<Cliente> findAll(Pageable pageable);
 
-	public Cliente findById(Long id);
+	Cliente findById(Long id);
 
-	public Cliente save(Cliente cliente);
+	Cliente save(Cliente cliente);
 
-	public Cliente update(Long id, Cliente cliente);
+	Cliente update(Long id, Cliente cliente);
 
-	public void delete(Long id);
+	void delete(Long id);
+
+	Cliente upload(Long id, String nombreArchivo);
 }

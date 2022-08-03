@@ -1,5 +1,6 @@
 package com.wilmardeml.springboot.backend.apirest.models.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,6 +35,8 @@ public class Cliente implements Serializable {
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
+
+    private String foto;
 
 	public Long getId() {
 		return id;
@@ -75,5 +78,10 @@ public class Cliente implements Serializable {
 		this.createAt = createAt;
 	}
 
+    public String getFoto() { return foto; }
+
+    public void setFoto(String foto) { this.foto = foto; }
+
+    @Serial
 	private static final long serialVersionUID = 1L;
 }

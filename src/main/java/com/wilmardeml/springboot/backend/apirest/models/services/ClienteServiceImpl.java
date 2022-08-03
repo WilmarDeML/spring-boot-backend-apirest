@@ -1,5 +1,8 @@
 package com.wilmardeml.springboot.backend.apirest.models.services;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,7 @@ public class ClienteServiceImpl implements IClienteService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Cliente> findAll() {
-		return (List<Cliente>) clienteDao.findAll();
+		return clienteDao.findAll();
 	}
 
 	@Override
@@ -42,6 +45,7 @@ public class ClienteServiceImpl implements IClienteService {
 	}
 
 	@Override
+	@Transactional
 	public Cliente update(Long id, Cliente cliente) {
 		Cliente foundClient = this.findById(id);
 		if (foundClient != null) {
@@ -57,7 +61,37 @@ public class ClienteServiceImpl implements IClienteService {
 	@Override
 	@Transactional
 	public void delete(Long id) {
-		clienteDao.deleteById(id);
+		Cliente cliente = this.findById(id);
+		if (cliente != null) {
+			String nombreFotoAnterior = cliente.getFoto();
+			if (nombreFotoAnterior != null && !nombreFotoAnterior.isBlank()) {
+				Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+				File archivoFotoAnterior = rutaFotoAnterior.toFile();
+				if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
+					archivoFotoAnterior.delete();
+				}
+			}
+			clienteDao.deleteById(id);
+		}
+	}
+
+	@Override
+	@Transactional
+	public Cliente upload(Long id, String nombreArchivo) {
+		Cliente cliente = this.findById(id);
+		if (cliente != null) {
+			String nombreFotoAnterior = cliente.getFoto();
+			if (nombreFotoAnterior != null && !nombreFotoAnterior.isBlank()) {
+				Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+				File archivoFotoAnterior = rutaFotoAnterior.toFile();
+				if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
+					archivoFotoAnterior.delete();
+				}
+			}
+			cliente.setFoto(nombreArchivo);
+			return this.save(cliente);
+		}
+		return null;
 	}
 
 }
