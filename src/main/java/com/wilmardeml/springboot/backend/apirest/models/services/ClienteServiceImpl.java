@@ -1,8 +1,5 @@
 package com.wilmardeml.springboot.backend.apirest.models.services;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,9 @@ public class ClienteServiceImpl implements IClienteService {
 
 	@Autowired
 	private IClienteDao clienteDao;
+
+	@Autowired
+	IUploadFileService uploadFileService;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -64,31 +64,19 @@ public class ClienteServiceImpl implements IClienteService {
 		Cliente cliente = this.findById(id);
 		if (cliente != null) {
 			String nombreFotoAnterior = cliente.getFoto();
-			if (nombreFotoAnterior != null && !nombreFotoAnterior.isBlank()) {
-				Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
-				File archivoFotoAnterior = rutaFotoAnterior.toFile();
-				if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
-					archivoFotoAnterior.delete();
-				}
-			}
+			uploadFileService.eliminar(nombreFotoAnterior);
 			clienteDao.deleteById(id);
 		}
 	}
 
 	@Override
 	@Transactional
-	public Cliente upload(Long id, String nombreArchivo) {
+	public Cliente upload(Long id, String nombreFoto) {
 		Cliente cliente = this.findById(id);
 		if (cliente != null) {
 			String nombreFotoAnterior = cliente.getFoto();
-			if (nombreFotoAnterior != null && !nombreFotoAnterior.isBlank()) {
-				Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
-				File archivoFotoAnterior = rutaFotoAnterior.toFile();
-				if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
-					archivoFotoAnterior.delete();
-				}
-			}
-			cliente.setFoto(nombreArchivo);
+			uploadFileService.eliminar(nombreFotoAnterior);
+			cliente.setFoto(nombreFoto);
 			return this.save(cliente);
 		}
 		return null;
