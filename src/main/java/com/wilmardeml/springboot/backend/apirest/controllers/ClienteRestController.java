@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
 import com.wilmardeml.springboot.backend.apirest.models.services.IUploadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -86,7 +87,7 @@ public class ClienteRestController {
 	}
 
 	@PutMapping("clientes/{id}")
-	public ResponseEntity<?> update(@Valid @PathVariable Long id, @RequestBody Cliente cliente, BindingResult result) {
+	public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente, BindingResult result, @PathVariable Long id) {
 		Map<String, Object> respuesta = new HashMap<>();
 
 		if (result.hasErrors()) {
@@ -165,4 +166,9 @@ public class ClienteRestController {
             throw new RuntimeException(e);
         }
     }
+
+	@GetMapping("clientes/regiones")
+	public List<Region> listarRegiones() {
+		return clienteService.findAllRegiones();
+	}
 }
