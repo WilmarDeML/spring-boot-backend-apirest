@@ -2,6 +2,7 @@ package com.wilmardeml.springboot.backend.apirest.models.services;
 
 import java.util.List;
 
+import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +54,7 @@ public class ClienteServiceImpl implements IClienteService {
 			foundClient.setApellido(cliente.getApellido());
 			foundClient.setEmail(cliente.getEmail());
 			foundClient.setCreateAt(cliente.getCreateAt());
+			foundClient.setRegion(cliente.getRegion());
 			return this.save(foundClient);
 		}
 		return null;
@@ -80,6 +82,11 @@ public class ClienteServiceImpl implements IClienteService {
 			return this.save(cliente);
 		}
 		return null;
+	}
+
+	@Override
+	public List<Region> findAllRegiones() {
+		return clienteDao.findAllRegiones();
 	}
 
 }
