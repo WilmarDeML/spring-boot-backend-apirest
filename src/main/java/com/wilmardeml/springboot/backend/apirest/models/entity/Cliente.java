@@ -1,5 +1,7 @@
 package com.wilmardeml.springboot.backend.apirest.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
@@ -37,6 +39,12 @@ public class Cliente implements Serializable {
 	private Date createAt;
 
     private String foto;
+
+	@NotNull(message = "no debe ser vacío")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "region_id") // Se puede omitir
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	private Region region;
 
 	public Long getId() {
 		return id;
@@ -82,6 +90,10 @@ public class Cliente implements Serializable {
 
     public void setFoto(String foto) { this.foto = foto; }
 
-    @Serial
+	public Region getRegion() { return region; }
+
+	public void setRegion(Region region) { this.region = region; }
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 }
