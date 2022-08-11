@@ -3,6 +3,7 @@ package com.wilmardeml.springboot.backend.apirest.models.services;
 import java.util.List;
 
 import com.wilmardeml.springboot.backend.apirest.models.entity.Cliente;
+import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,6 @@ public interface IClienteService {
 	void delete(Long id);
 
 	Cliente upload(Long id, String nombreArchivo);
+
+	List<Region> findAllRegiones();
 }
