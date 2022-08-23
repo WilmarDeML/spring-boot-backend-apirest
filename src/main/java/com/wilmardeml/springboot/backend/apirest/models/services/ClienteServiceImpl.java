@@ -2,7 +2,11 @@ package com.wilmardeml.springboot.backend.apirest.models.services;
 
 import java.util.List;
 
+import com.wilmardeml.springboot.backend.apirest.models.dao.IFacturaDao;
+import com.wilmardeml.springboot.backend.apirest.models.entity.Factura;
 import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
+import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IClienteService;
+import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IUploadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +23,10 @@ public class ClienteServiceImpl implements IClienteService {
 	private IClienteDao clienteDao;
 
 	@Autowired
-	IUploadFileService uploadFileService;
+	private IFacturaDao facturaDao;
+
+	@Autowired
+    IUploadFileService uploadFileService;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -87,6 +94,24 @@ public class ClienteServiceImpl implements IClienteService {
 	@Override
 	public List<Region> findAllRegiones() {
 		return clienteDao.findAllRegiones();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Factura findFacturaById(Long id) {
+		return facturaDao.findById(id).orElse(null);
+	}
+
+	@Override
+	@Transactional
+	public Factura saveFactura(Factura factura) {
+		return facturaDao.save(factura);
+	}
+
+	@Override
+	@Transactional
+	public void deleteFacturaById(Long id) {
+		facturaDao.deleteById(id);
 	}
 
 }

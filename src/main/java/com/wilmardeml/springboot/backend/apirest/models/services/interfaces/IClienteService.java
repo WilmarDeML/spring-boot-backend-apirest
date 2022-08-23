@@ -1,8 +1,9 @@
-package com.wilmardeml.springboot.backend.apirest.models.services;
+package com.wilmardeml.springboot.backend.apirest.models.services.interfaces;
 
 import java.util.List;
 
 import com.wilmardeml.springboot.backend.apirest.models.entity.Cliente;
+import com.wilmardeml.springboot.backend.apirest.models.entity.Factura;
 import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,10 @@ public interface IClienteService {
 	Cliente upload(Long id, String nombreArchivo);
 
 	List<Region> findAllRegiones();
+
+	Factura findFacturaById(Long id);
+
+	Factura saveFactura(Factura factura);
+
+	void deleteFacturaById(Long id);
 }

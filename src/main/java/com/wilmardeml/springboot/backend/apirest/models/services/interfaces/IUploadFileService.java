@@ -1,4 +1,4 @@
-package com.wilmardeml.springboot.backend.apirest.models.services;
+package com.wilmardeml.springboot.backend.apirest.models.services.interfaces;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
