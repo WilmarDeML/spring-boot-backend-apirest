@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -45,6 +47,13 @@ public class Cliente implements Serializable {
 	@JoinColumn(name = "region_id") // Se puede omitir
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Region region;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
+	private List<Factura> facturas;
+
+	public Cliente() {
+		this.facturas = new ArrayList<>();
+	}
 
 	public Long getId() {
 		return id;
@@ -93,6 +102,14 @@ public class Cliente implements Serializable {
 	public Region getRegion() { return region; }
 
 	public void setRegion(Region region) { this.region = region; }
+
+	public List<Factura> getFacturas() {
+		return facturas;
+	}
+
+	public void setFacturas(List<Factura> facturas) {
+		this.facturas = facturas;
+	}
 
 	@Serial
 	private static final long serialVersionUID = 1L;
