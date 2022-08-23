@@ -2,6 +2,7 @@ package com.wilmardeml.springboot.backend.apirest.models.services;
 
 import com.wilmardeml.springboot.backend.apirest.models.dao.IUsuarioDao;
 import com.wilmardeml.springboot.backend.apirest.models.entity.Usuario;
+import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IUsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

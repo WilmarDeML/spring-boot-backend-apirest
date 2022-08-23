@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
-import com.wilmardeml.springboot.backend.apirest.models.services.IUploadFileService;
+import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IUploadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
@@ -21,7 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.wilmardeml.springboot.backend.apirest.models.entity.Cliente;
-import com.wilmardeml.springboot.backend.apirest.models.services.IClienteService;
+import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IClienteService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -48,7 +48,7 @@ public class ClienteRestController {
 		return clienteService.findAll(pageable);
 	}
 
-	@Secured({"ROLE_ADMIN", "ROLE_USER"})
+	// @Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("clientes/{id}")
 	public ResponseEntity<?> listById(@PathVariable Long id) {
 		Map<String, Object> respuesta = new HashMap<>();

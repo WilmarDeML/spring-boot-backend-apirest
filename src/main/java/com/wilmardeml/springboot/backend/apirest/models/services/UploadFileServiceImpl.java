@@ -1,5 +1,6 @@
 package com.wilmardeml.springboot.backend.apirest.models.services;
 
+import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IUploadFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;

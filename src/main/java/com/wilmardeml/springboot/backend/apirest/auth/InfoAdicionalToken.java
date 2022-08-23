@@ -1,7 +1,7 @@
 package com.wilmardeml.springboot.backend.apirest.auth;
 
 import com.wilmardeml.springboot.backend.apirest.models.entity.Usuario;
-import com.wilmardeml.springboot.backend.apirest.models.services.IUsuarioService;
+import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
