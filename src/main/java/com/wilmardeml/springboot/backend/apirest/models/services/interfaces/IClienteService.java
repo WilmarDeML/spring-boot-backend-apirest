@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.wilmardeml.springboot.backend.apirest.models.entity.Cliente;
 import com.wilmardeml.springboot.backend.apirest.models.entity.Factura;
+import com.wilmardeml.springboot.backend.apirest.models.entity.Producto;
 import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,6 @@ public interface IClienteService {
 	Factura saveFactura(Factura factura);
 
 	void deleteFacturaById(Long id);
+
+	List<Producto> findProductoByNombre(String term);
 }

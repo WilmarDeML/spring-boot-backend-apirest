@@ -3,7 +3,9 @@ package com.wilmardeml.springboot.backend.apirest.models.services;
 import java.util.List;
 
 import com.wilmardeml.springboot.backend.apirest.models.dao.IFacturaDao;
+import com.wilmardeml.springboot.backend.apirest.models.dao.IProductoDao;
 import com.wilmardeml.springboot.backend.apirest.models.entity.Factura;
+import com.wilmardeml.springboot.backend.apirest.models.entity.Producto;
 import com.wilmardeml.springboot.backend.apirest.models.entity.Region;
 import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IClienteService;
 import com.wilmardeml.springboot.backend.apirest.models.services.interfaces.IUploadFileService;
@@ -18,6 +20,9 @@ import com.wilmardeml.springboot.backend.apirest.models.entity.Cliente;
 
 @Service
 public class ClienteServiceImpl implements IClienteService {
+
+	@Autowired
+	private IProductoDao productoDao;
 
 	@Autowired
 	private IClienteDao clienteDao;
@@ -112,6 +117,12 @@ public class ClienteServiceImpl implements IClienteService {
 	@Transactional
 	public void deleteFacturaById(Long id) {
 		facturaDao.deleteById(id);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Producto> findProductoByNombre(String term) {
+		return productoDao.findByNombreContainingIgnoreCase(term);
 	}
 
 }
